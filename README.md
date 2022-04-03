@@ -66,6 +66,18 @@ Found 1 outliers in 6 samples (16.6667 %)
  Variance from outliers : 15.0924 % Variance is moderately inflated by outliers
 ```
 
+### Compatibility with clojure.data.csv
+
+To ensure compatibility with data.csv, the same data sets are used from
+data.csv's tests, and the tests check that:
+
+```clojure
+(let [data (csv/read sample)]
+  (= (fast.csv/write ,,, sample) (data.csv/write ,,, sample)))
+```
+
+Moreover, `format-csv-xf` receives the same options as `data.csv/write`.
+
 ## License
 
 Copyright © 2022 Ben Sless
