@@ -19,7 +19,7 @@
         (if (= (.length s) index)
           (.toString (doto buffer (.append q)))
           (let [ch (.charAt s i)]
-            (.append buffer (if (= ch from) to ch))
+            (if (= ch from) (.append buffer to) (.append buffer ch))
             (recur (unchecked-inc index) buffer)))))))
 
 (defn format-cell-xf
@@ -38,7 +38,10 @@
                       (escape string quote escaped-quote quote)
                       string)))))))
 
-(comment (escape "abcde" \d "Z" \*))
+(comment
+  (require 'criterium.core)
+  (criterium.core/quick-bench
+   (escape "abcde" \d "Z" \*)))
 
 (defn some-char-pred
   "Takes a coll of chars `chs` and returns a pred which efficiently checks
