@@ -35,3 +35,14 @@
     (println "fast.csv")
     (cc/quick-bench
      (transduce (fast.csv/format-csv-xf) fast.csv/write-csv-rf xs))))
+
+(defn spin-write
+  [{:keys [rows columns width]
+    :or {rows 1000
+         columns 10
+         width 10}}]
+  (let [xs (vec (for [_ (range rows)]
+                  (mapv #(apply str (repeat width %)) (range columns))))]
+    (time
+     (dotimes [_ 1e5]
+       (transduce (fast.csv/format-csv-xf) fast.csv/write-csv-rf xs)))))
