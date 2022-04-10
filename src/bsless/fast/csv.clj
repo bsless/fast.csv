@@ -10,9 +10,9 @@
 (defn escape
   "Escape a string `s` mapping char `from` to string `to` and quote it with `q`.
   Internal implementation detail."
-  ^String [^CharSequence s from ^String to q]
-  (let [from (char from)
-        q (char q)]
+  ^String [^CharSequence s ^Character from ^String to ^Character q]
+  (let [from (.charValue from)
+        q (.charValue q)]
     (loop [index 0
            buffer (doto (StringBuilder. (.length s)) (.append q))]
       (let [i (unchecked-int index)]
@@ -33,13 +33,12 @@
       ([] (rf))
       ([result] (rf result))
       ([result ^Object input]
-       (let [string (if (nil? input) "" (. input (toString)))
-             must-quote (boolean (quote? string))]
-         (rf result (if must-quote
-                      (escape string quote escaped-quote (int quote))
+       (let [string (if (nil? input) "" (. input (toString)))]
+         (rf result (if (boolean (quote? string))
+                      (escape string quote escaped-quote quote)
                       string)))))))
 
-(comment (escape "abcde" \d "Z" (int \*)))
+(comment (escape "abcde" \d "Z" \*))
 
 (defn some-char-pred
   "Takes a coll of chars `chs` and returns a pred which efficiently checks
